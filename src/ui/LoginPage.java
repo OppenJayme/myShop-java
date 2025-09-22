@@ -88,7 +88,7 @@ public class LoginPage extends JFrame {
             return;
         }
     
-        String sql = "SELECT first_name FROM users WHERE gmail = ? AND password = ?";
+        String sql = "SELECT first_name, last_name, email FROM users WHERE email = ? AND password = ?";
     
         try (Connection conn = db.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -99,10 +99,12 @@ public class LoginPage extends JFrame {
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     String fname = rs.getString("first_name");
+                    String lname = rs.getString("last_name");
+                    String email = rs.getString("email");
                     JOptionPane.showMessageDialog(this, "Welcome, " + fname + "!");
     
                     System.out.println("[Login] Opening LandingPage for: " + fname);
-                    SwingUtilities.invokeLater(() -> new LandingPage(fname));  // show next page
+                    SwingUtilities.invokeLater(() -> new LandingPage(fname, lname, gmail));  // show next page
     
                     dispose(); // close login after scheduling next page
                 } else {
